@@ -1,0 +1,1 @@
+babel -i pdbqt *0.pdbqt -o sdf *.sdf

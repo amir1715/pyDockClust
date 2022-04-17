@@ -4,8 +4,11 @@ from itertools import chain
 from collections import OrderedDict
 import numpy as np
 from scipy.sparse import csr_matrix, isspmatrix_csr
-import oddt,os
+import oddt
+import os
 from oddt.utils import is_openbabel_molecule
+from oddt.spatial import angle, angle_2v, distance
+
 
 """Module calculates interactions between two molecules
 (proein-protein, protein-ligand, small-small).
@@ -19,10 +22,6 @@ Currently following interacions are implemented:
     * metal coordination
     * pi-metal
 """
-
-import numpy as np
-from oddt.spatial import angle, angle_2v, distance
-
 __all__ = ['close_contacts',
            'hbond_acceptor_donor',
            'hbonds',

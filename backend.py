@@ -5,7 +5,10 @@ from PyQt5.QtWidgets import (QApplication, QAction, qApp,  QMainWindow, QRadioBu
     QFileDialog, QPushButton, QLineEdit, QMessageBox)
 from PyQt5.QtGui import QIcon
 from oddt_funcs import *
-import re,os,oddt,subprocess
+import re
+import os
+import oddt
+import subprocess
 import numpy as np 
 import matplotlib.pyplot as plt
 import scipy.cluster.hierarchy as shc
@@ -13,7 +16,7 @@ import  pandas as pd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
-import seaborn as sns
+
 # writing finger generate on thread
 # class MyThread(QThread):
     # # Create a counter thread
@@ -55,7 +58,7 @@ class pyclust_funcs():
         # self.progressbar.setValue(val) 
         
     def lig_preprocess(self):
-        self.progressbar.setValue(4)
+        self.progressbar.setValue(1)
         try:
             options = QFileDialog.Options()
             options |= QFileDialog.DontUseNativeDialog
@@ -73,7 +76,7 @@ class pyclust_funcs():
             pass
 
     def protein_preprocess(self):
-        self.progressbar.setValue(4)
+        self.progressbar.setValue(1)
         try:
             options = QFileDialog.Options()
             proteinf, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","pdbqt Files (*.pdbqt);;pdbqt Files (*.pdbqt)", options=options)
@@ -101,11 +104,12 @@ class pyclust_funcs():
         os.chdir(curpath)
                      
     def fingerGenerate(self):
+        self.progressbar.setValue(1)
         protein=self.protein
         list_of_ligs=self.ligFiles
         t=np.zeros((len(list_of_ligs),168))
         for i in enumerate(list_of_ligs):
-            #self.progressbar.setValue(i[0]) 
+            self.progressbar.setValue(int(((i[0]+1)/len(list_of_ligs))*100)) 
             try:
                 ligand = next(oddt.toolkit.readfile('sdf', list_of_ligs[i[0]]))
                 SIFP = SimpleInteractionFingerprint(ligand, protein)
@@ -146,13 +150,6 @@ class pyclust_funcs():
             lbls=[x.replace("/","") for x in lbls]
             lbls=[x.replace("\\","") for x in lbls]
             dend=shc.dendrogram(shc.linkage(self.data_f, method='ward'),labels=lbls,leaf_rotation=90)
-
-            #df=self.data_f
-            #df = df.drop(df.columns[0], axis=1)
-            #heatplt = sns.clustermap(df)
-            #heatplt = sns.clustermap(self.data_f)
-            #heatplt.map(plt.scatter, "total_bill", "tip", edgecolor="w")
-            #heatplt.fig
             self.canvas.draw()
         except:
             QMessageBox.about(self,"Plot","No data to show")            
@@ -176,7 +173,8 @@ class pyclust_funcs():
                 filename=os.path.join(self.lig_path_to_file,bas_name)+str(ind)+'.pdbqt'
                 f= open(filename,"w+")      
                 print(ind)
-                  
+    def help(self):
+        QMessageBox.about(self,"About","Developed at school of pharmacy, Shiraz University of Medical Sciences")
     # methods on GUI
     def our_methods(self):
         self.actionOpen_Protein.triggered.connect(self.protein_preprocess)  #open protein
@@ -185,7 +183,7 @@ class pyclust_funcs():
         self.actionPlot.triggered.connect(self.plshow)                             #plot show
         self.actionExport_Fingerprint.triggered.connect(self.export_finger)                             #plot show
         self.actionImport_Fingerprint.triggered.connect(self.import_finger)
-        #self.actionAbout.triggered.connect(self.startProgressBar)
+        self.actionAbout.triggered.connect(self.help)
         
 
     

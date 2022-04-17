@@ -30,7 +30,7 @@ class Ui_MainWindow(QMainWindow,pyclust_funcs):
         #self.progressbar.setOrientation(Qt.Vertical)
         self.progressbar.setMaximum(100)
         self.progressbar.setStyleSheet("QProgressBar {border: 2px solid grey;border-radius:8px;padding:1px}"
-                                       "QProgressBar::chunk {background:yellow}")
+                                       "QProgressBar::chunk {background:red}")
         
         
         self.centralwidget.setObjectName("centralwidget")
